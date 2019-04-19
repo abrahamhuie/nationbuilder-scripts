@@ -1,5 +1,4 @@
 require 'nationbuilder'
-require 'pp'
 
 nation_slug = '[nation_slug]'
 api_token = '[api_token]'
