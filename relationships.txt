@@ -1,0 +1,4 @@
+select rel.first_signup_id as parent_id, s1.full_name as parent_name, s1.signup_type as parent_type, rel.second_signup_id as child_id, s2.full_name as child_name, s2.signup_type as child_type, rel.relationship_type
+from nbuild_[slug].relationships rel
+inner join nbuild_[slug].signups s1 on s1.id = rel.first_signup_id
+inner join nbuild_[slug].signups s2 on s2.id = rel.second_signup_id;
