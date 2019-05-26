@@ -1,0 +1,36 @@
+SELECT donations.signup_id AS "NationBuilder ID", signups.first_name as "First Name", signups.last_name as "Last Name", signups.email1 as "Email", addresses.address1 as "Address 1",addresses.address2 as "Address 2", addresses.city as "City", addresses.state as "State", addresses.zip as "Zip",
+      SUM(donations.amount_in_cents) / 100.0 AS "Total Amount",
+            COUNT(donations.id) AS "Total # Donations (ytd)",
+            MIN(last_donations.amount_in_cents / 100.0) AS "Last Donation Amount",
+            MIN(last_donations.succeeded_at) AS "Last Donation Date",
+            MIN(CASE WHEN first_time_donors.succeeded_at IS NULL THEN 0 ELSE 1 END) AS "Is First Time Donor"
+          FROM [nbuild_schema].donations
+      
+      inner join [nbuild_schema].signups on donations.signup_id = signups.id
+      inner join [nbuild_schema].addresses on signups.address_id = addresses.id
+
+          INNER JOIN (          SELECT donations.signup_id, donations.amount_in_cents, donations.succeeded_at
+          FROM [nbuild_schema].donations
+          INNER JOIN (
+            SELECT donations.signup_id, MAX(donations.succeeded_at) AS succeeded_at
+            FROM [nbuild_schema].donations
+            WHERE donations.succeeded_at >= '2018-01-01 00:00:00.000000' AND donations.succeeded_at < '2019-01-01 00:00:00.000000'
+            GROUP BY signup_id
+          ) AS last_donation_dates
+            ON donations.signup_id = last_donation_dates.signup_id AND donations.succeeded_at = last_donation_dates.succeeded_at
+) AS last_donations
+            ON donations.signup_id = last_donations.signup_id
+
+          LEFT JOIN (            SELECT donations.signup_id, MIN(donations.succeeded_at) AS succeeded_at
+            FROM [nbuild_schema].donations
+            GROUP BY signup_id
+            HAVING MIN(succeeded_at) >= '2018-01-01 00:00:00.000000' AND MIN(succeeded_at) < '2019-01-01 00:00:00.000000'
+) AS first_time_donors
+            ON donations.signup_id = first_time_donors.signup_id
+
+
+          WHERE donations.succeeded_at >= '2018-01-01 00:00:00.000000' AND donations.succeeded_at < '2019-01-01 00:00:00.000000'
+          
+      GROUP BY donations.signup_id, signups.first_name, signups.last_name, signups.email1, 
+      addresses.address1, addresses.address2, addresses.city, addresses.state, addresses.zip
+          ORDER BY donations.signup_id ASC
