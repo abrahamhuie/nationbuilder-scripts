@@ -7,7 +7,7 @@ client = NationBuilder::Client.new(nation_slug, api_token, retries: 8)
 params = {
 	"id": #,
 	"donation": {
-      "donor_id": #,
+	      "donor_id": #,
       	}
 }
 }
