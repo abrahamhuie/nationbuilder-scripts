@@ -4,7 +4,7 @@ nation_slug = '[nation_slug]'
 api_token = '[api_token]'
 client = NationBuilder::Client.new(nation_slug, api_token, retries: 8)
 
-response = client.call(:blog_posts, :index, site_slug: #, id: #, limit: 100)
+response = client.call(:blog_posts, :index, site_slug: '[site_slug], id: [id], limit: 100)
 paginated = NationBuilder::Paginator.new(client, response)
 
 page1 = paginated
