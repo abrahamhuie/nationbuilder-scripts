@@ -9,10 +9,12 @@ sysctl -n hw.ncpu
 
 I had 5 cores in my machine. So I ended up claiming 2 for the pg_restore since i didn't want to redline my cpu. You can add the flag -j # to your restore to claim the number of cores you desire.
 
-4) Restore Schema ---
+4) Restore Schema --- run the following command in your existing terminal window
+
 pg_restore -U nbuild -d nbuild -h localhost -p 5432 -j [#of_cores] --schema nbuild_[slug] --verbose [backupfilename]
-make sure you're running restore on the directory that your backup is in for the above to work.
+
+Make sure you're running restore on the directory that your backup is in for the above to work.
 
 5) Let restore run. Mine took about an hour.
 
-6) Visit schema as you normally would on pgadmin :slightly_smiling_face:
+6) Visit schema as you normally would on pgadmin :)
